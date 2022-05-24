@@ -17,8 +17,10 @@ const Discord = require('discord.js');
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS", "GUILD_PRESENCES"] });
 const fs = require('fs');
 const _server = require('./auth.js');
+// const handler = require('./handler.js');
 client.commands = new Discord.Collection();
 client.sv_users = new Discord.Collection();
+client.channel_ids = new Discord.Collection();
 
 // Reads all the commands in the commands folder and adds it to the Discord client object
 const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
@@ -38,10 +40,14 @@ client.once('ready', () =>
     console.log('OopStats is online! wee');
     server.members.cache.forEach(member => 
         {
-            client.sv_users.set(member.user.username, member.user);
+            let id = ("<@" + member.user.id + ">");
+            client.sv_users.set(id, member.user);
             // console.log(member.user.username);
         });
-    //console.log(client.sv_users.get('Mouse'));
+    //console.log(client.sv_users.get('<@121716694379921408>'));
+    client.channel_ids = _server.channel_ids;
+    console.log(_server.channel_ids);
+
 });
 
 client.on('messageCreate', message =>
@@ -67,7 +73,7 @@ client.on('messageCreate', message =>
         return;
     }
 
-    client.commands.get(command).execute(message, args);
+    client.commands.get(command).execute(client, message, args);
 
 });
 

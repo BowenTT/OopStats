@@ -10,7 +10,7 @@ module.exports =
 {
     name: 'hamster',
     description: "Sends a hamster in the chat.",
-    execute(message, args)
+    execute(client, message, args)
     {
         
         const hamsterPics = ['https://images.unsplash.com/photo-1584553421349-3557471bed79?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80',
