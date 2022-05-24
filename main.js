@@ -4,27 +4,73 @@ Functionalities:
     -   Calls.js:
         •	Count total hours in call
         •	Average call time daily, weekly, yearly, total
-        •	Most active
+        •	Most active (which user has the longest total call time)
         •	Who gets booted to stupid jail most?
-        •	Who streams the most?
+        •	Who streams the most? (total stream time)
 
     -   Chat.js
         •	Messages sent (by user)
         •	Wordle streak
 
 */
-import {test} from './chat.js'
-import Discord from 'discord.js'
+const Discord = require('discord.js');
+const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES", "GUILD_MEMBERS", "GUILD_PRESENCES"] });
+const fs = require('fs');
+const _server = require('./auth.js');
+client.commands = new Discord.Collection();
+client.sv_users = new Discord.Collection();
 
-const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] })
+// Reads all the commands in the commands folder and adds it to the Discord client object
+const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
+for(const file of commandFiles)
+{
+    const command = require(`./commands/${file}`);
+    client.commands.set(command.name, command);
+}
+
+
+const prefix = '-';
+
 
 client.once('ready', () =>
 {
+    const server = _server.init(client, _server.server_id);
     console.log('OopStats is online! wee');
-    console.log(test());
+    server.members.cache.forEach(member => 
+        {
+            client.sv_users.set(member.user.username, member.user);
+            // console.log(member.user.username);
+        });
+    //console.log(client.sv_users.get('Mouse'));
 });
 
+client.on('messageCreate', message =>
+{
+    /* Runs a command based on a prefix
+       Commands are listed in commands.js 
+    */
 
+    //If message does not start with the prefix, do nothing
+    if(!message.content.startsWith(prefix) || message.author.bot)
+    {
+        return;
+    }
 
-client.login('OTc4NjM4MTQ1NTcyNzA0Mjg3.Gs4cem.TKADs_jj1FFHYZwzAwib8OnTNt_1iA3hyuY50k');
+    //Retrieve the command from the user message and convert it to lowercase
+    const args = message.content.slice(prefix.length).split(" ");
+    const command = args.shift().toLowerCase();
+    console.log(args);
+
+    //Check if command exists
+    if(!client.commands.has(command))
+    {
+        return;
+    }
+
+    client.commands.get(command).execute(message, args);
+
+});
+
+// console.log(auth_key.auth_key);
+client.login(_server.auth_key);
 
