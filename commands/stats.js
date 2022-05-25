@@ -7,8 +7,8 @@ function execute(client, message, args)
     }
     else if(client.sv_users.has(args[0]))
     {
-        var final_message = 'Out of the past 100 messages in each channel, ' + args[0] + ' has written: \n';
-        message.channel.send((args[0] + "'s stats here."));
+        var final_message = '***Out of the past 100 messages in each channel, ***' + args[0] + '*** has written:*** \n';
+        message.channel.send((args[0] + "***'s stats here.***"));
         message.channel.send(final_message);
         let username = args[0].substring(2, args[0].length-1);
         Object.keys(client.channel_ids).forEach(key => 

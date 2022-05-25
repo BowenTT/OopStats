@@ -2,8 +2,8 @@ const { channel } = require("diagnostics_channel");
 
 function execute(client, message, args)
 {
-    let start = '**List of all possible commands: **\n';
-    let end = '** type **' + client.prefix + '**help to get information on each command.\n**'; 
+    let start = '***List of all possible commands: ***\n';
+    let end = '*** type ***' + client.prefix + 'help ***to get information on each command.\n***'; 
     let cmd_msg = ' ';
     client.commands.forEach(command => 
         {
