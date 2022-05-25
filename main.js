@@ -1,14 +1,14 @@
 /*
 A discord bot for the Oops Server
 Functionalities:
-    -   Calls.js:
+    -   Calls
         •	Count total hours in call
         •	Average call time daily, weekly, yearly, total
         •	Most active (which user has the longest total call time)
         •	Who gets booted to stupid jail most?
         •	Who streams the most? (total stream time)
 
-    -   Chat.js
+    -   Chat
         •	Messages sent (by user)
         •	Wordle streak
 
@@ -21,6 +21,7 @@ const _server = require('./auth.js');
 client.commands = new Discord.Collection();
 client.sv_users = new Discord.Collection();
 client.channel_ids = new Discord.Collection();
+client.prefix = new Discord.Collection();
 
 // Reads all the commands in the commands folder and adds it to the Discord client object
 const commandFiles = fs.readdirSync('./commands/').filter(file => file.endsWith('.js'));
@@ -31,7 +32,7 @@ for(const file of commandFiles)
 }
 
 
-const prefix = '-';
+client.prefix = '-';
 
 
 client.once('ready', () =>
@@ -57,15 +58,15 @@ client.on('messageCreate', message =>
     */
 
     //If message does not start with the prefix, do nothing
-    if(!message.content.startsWith(prefix) || message.author.bot)
+    if(!message.content.startsWith(client.prefix) || message.author.bot)
     {
         return;
     }
 
     //Retrieve the command from the user message and convert it to lowercase
-    const args = message.content.slice(prefix.length).split(" ");
+    const args = message.content.slice(client.prefix.length).split(" ");
     const command = args.shift().toLowerCase();
-    console.log(args);
+    //console.log(args);
 
     //Check if command exists
     if(!client.commands.has(command))
@@ -77,6 +78,5 @@ client.on('messageCreate', message =>
 
 });
 
-// console.log(auth_key.auth_key);
 client.login(_server.auth_key);
 
