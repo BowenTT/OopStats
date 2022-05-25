@@ -51,7 +51,7 @@ client.once('ready', () =>
 
 });
 
-client.on('messageCreate', message =>
+client.on('messageCreate', async message =>
 {
     /* Runs a command based on a prefix
        Commands are listed in commands.js 
